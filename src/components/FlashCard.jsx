@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import { useState } from "react";
-import turn from "../assets/images/seta_virar.png"
-import seta from "../assets/images/seta_play.png"
 import colors from "../assets/styles/colors";
+import turn from "../assets/images/seta_virar.png"
+import Icon from "./Icon";
 
-function FlashCard({ number, isOpened, openCard, question, answer, status }) {
+
+function FlashCard({ number, isOpened, openCard, question, answer, status, turnCard, turned }) {
     const { red, yellow, green, gray } = colors
-    const [turned, setTurned] = useState(false)
 
     function open() {
         if (status === "no status") {
@@ -14,39 +13,33 @@ function FlashCard({ number, isOpened, openCard, question, answer, status }) {
         }
     }
 
-    function chooseColor () {
-        switch(status) {
-            case "error" :
+    function chooseColor() {
+        switch (status) {
+            case "error":
                 return red
-            case "almost" :
-                return "yellow"
-            case "right" :
-                return "green"
+            case "almost":
+                return yellow
+            case "right":
+                return green
+            default:
+                return gray
         }
     }
 
     return (
         <>
-            {/* <OpenCard onClick={() => turnCard(turned)}>
-                Pergunta {number}
-                <img src={seta} />
-            </OpenCard> */}
-
             {isOpened ? (
                 <OpenCard>
-
                     <p>{turned ? answer : question}</p>
                     {!turned && < img src={turn} alt="vira carta"
-                        onClick={() => setTurned(!turned)} />}
-
+                        onClick={turnCard} />}
                 </OpenCard>
             ) : (
                 <ClosedCard onClick={open}>
-                        <CardTextClosed color={chooseColor()}>Pergunta {number}</CardTextClosed>
-                    <img src={seta} />
+                    <CardTextClosed color={chooseColor()} status={status}>Pergunta {number}</CardTextClosed>
+                    <Icon status={status} />
                 </ClosedCard>
             )}
-
         </>
     )
 }
@@ -72,6 +65,7 @@ const CardTextClosed = styled.p`
     font-size: 16px;
     line-height: 19px;
     color: ${props => props.color};
+    text-decoration: ${props => props.status !== "no status" ? "line-through" : ""};
 `
 
 const OpenCard = styled.div`
